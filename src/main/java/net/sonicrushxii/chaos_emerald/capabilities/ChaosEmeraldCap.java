@@ -1,7 +1,7 @@
 package net.sonicrushxii.chaos_emerald.capabilities;
 
 import net.minecraft.nbt.CompoundTag;
-import net.sonicrushxii.chaos_emerald.capabilities.all.ChaosUseDetails;
+import net.sonicrushxii.chaos_emerald.capabilities.all.ChaosAbilityDetails;
 import net.sonicrushxii.chaos_emerald.capabilities.all.PlayerFrozenDetails;
 import net.sonicrushxii.chaos_emerald.capabilities.all.form_properties.FormProperties;
 
@@ -21,7 +21,7 @@ public class ChaosEmeraldCap
     public PlayerFrozenDetails playerFrozenDetails = new PlayerFrozenDetails();
 
     //Chaos Emerald Usage
-    public ChaosUseDetails chaosUseDetails = new ChaosUseDetails();
+    public ChaosAbilityDetails chaosAbilityDetails = new ChaosAbilityDetails();
 
     public void copyDeathFrom(ChaosEmeraldCap source)
     {
@@ -40,7 +40,8 @@ public class ChaosEmeraldCap
         this.formProperties = source.formProperties;
 
         //Chaos Emerald Ability Usage
-        this.chaosUseDetails = source.chaosUseDetails;
+        this.chaosAbilityDetails = source.chaosAbilityDetails;
+        this.chaosAbilityDetails.previousDimensionPos = new int[5];
     }
 
     public void copyPerfectFrom(ChaosEmeraldCap source)
@@ -69,7 +70,7 @@ public class ChaosEmeraldCap
         nbt.put("FormAbilities", formProperties.serialize());
 
         //Chaos Emerald Abilities
-        nbt.put("ChaosAbilities", chaosUseDetails.serialize());
+        nbt.put("ChaosAbilities", chaosAbilityDetails.serialize());
     }
 
     public void loadNBTData(CompoundTag nbt)
@@ -94,7 +95,7 @@ public class ChaosEmeraldCap
         formProperties = new FormProperties(formDetails);
 
         //Chaos Emerald Abilities
-        this.chaosUseDetails = new ChaosUseDetails(nbt.getCompound("ChaosAbilities"));
+        this.chaosAbilityDetails = new ChaosAbilityDetails(nbt.getCompound("ChaosAbilities"));
     }
 
     public boolean isUsingActiveAbility()

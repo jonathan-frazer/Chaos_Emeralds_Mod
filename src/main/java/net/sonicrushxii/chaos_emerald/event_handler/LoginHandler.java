@@ -2,12 +2,10 @@ package net.sonicrushxii.chaos_emerald.event_handler;
 
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.sonicrushxii.chaos_emerald.capabilities.ChaosEmeraldProvider;
-import net.sonicrushxii.chaos_emerald.capabilities.all.ChaosUseDetails;
-import net.sonicrushxii.chaos_emerald.event_handler.custom.ChaosEmeraldHandler;
+import net.sonicrushxii.chaos_emerald.capabilities.all.ChaosAbilityDetails;
 import net.sonicrushxii.chaos_emerald.network.PacketHandler;
 import net.sonicrushxii.chaos_emerald.network.all.EmeraldDataSyncS2C;
 import net.sonicrushxii.chaos_emerald.network.common.ChaosTeleport;
@@ -26,7 +24,7 @@ public class LoginHandler {
     {
         player.getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(chaosEmeraldCap -> {
             //Fetch Ability Properties
-            ChaosUseDetails chaosAbilities = chaosEmeraldCap.chaosUseDetails;
+            ChaosAbilityDetails chaosAbilities = chaosEmeraldCap.chaosAbilityDetails;
 
             //Reset Time Stop
             if(chaosAbilities.timeStop > 0)

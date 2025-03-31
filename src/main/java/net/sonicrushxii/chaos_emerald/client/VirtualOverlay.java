@@ -11,7 +11,7 @@ import net.minecraftforge.client.gui.overlay.IGuiOverlay;
 import net.sonicrushxii.chaos_emerald.ChaosEmerald;
 import net.sonicrushxii.chaos_emerald.Utilities;
 import net.sonicrushxii.chaos_emerald.capabilities.ChaosEmeraldProvider;
-import net.sonicrushxii.chaos_emerald.capabilities.all.ChaosUseDetails;
+import net.sonicrushxii.chaos_emerald.capabilities.all.ChaosAbilityDetails;
 import net.sonicrushxii.chaos_emerald.event_handler.custom.ChaosEmeraldHandler;
 import org.joml.Vector3f;
 
@@ -33,16 +33,15 @@ public class VirtualOverlay {
         if (player == null) return;
 
         player.getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(chaosEmeraldCap -> {
-            ChaosUseDetails chaosAbility = chaosEmeraldCap.chaosUseDetails;
-            if (chaosAbility.useColor > -1 && (chaosAbility.timeStop > 0 || chaosAbility.teleport > 0)) {
-                renderChaosOverlay(player, gui, guiComponent, partialTick, screenWidth, screenHeight);
-            }
+            ChaosAbilityDetails chaosAbility = chaosEmeraldCap.chaosAbilityDetails;
+            if(chaosAbility.useColor > -1 && (chaosAbility.abilityInUse()))
+                renderChaosOverlay(player,gui,guiComponent,partialTick,screenWidth,screenHeight);
         });
     });
 
     public static void renderChaosOverlay(AbstractClientPlayer player, ForgeGui gui, GuiGraphics guiComponent, float partialTick, int screenWidth, int screenHeight) {
         player.getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(chaosEmeraldCap -> {
-            ChaosUseDetails chaosAbility = chaosEmeraldCap.chaosUseDetails;
+            ChaosAbilityDetails chaosAbility = chaosEmeraldCap.chaosAbilityDetails;
 
             // Calculate gradient based on the time spent in Timestop/Teleport
             float overlayGradient = (chaosAbility.teleport > 0)

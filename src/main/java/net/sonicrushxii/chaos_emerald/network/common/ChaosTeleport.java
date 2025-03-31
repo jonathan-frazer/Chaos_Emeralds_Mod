@@ -4,13 +4,12 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.TickRateManager;
 import net.minecraft.world.level.GameType;
 import net.sonicrushxii.chaos_emerald.capabilities.ChaosEmeraldProvider;
 import net.sonicrushxii.chaos_emerald.capabilities.EmeraldAbility;
-import net.sonicrushxii.chaos_emerald.capabilities.all.ChaosUseDetails;
+import net.sonicrushxii.chaos_emerald.capabilities.all.ChaosAbilityDetails;
 import net.sonicrushxii.chaos_emerald.event_handler.custom.ChaosEmeraldHandler;
 import net.sonicrushxii.chaos_emerald.modded.ModSounds;
 import net.sonicrushxii.chaos_emerald.network.PacketHandler;
@@ -24,10 +23,10 @@ public class ChaosTeleport
         player.getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(chaosEmeraldCap ->
         {
             //Fetch Ability Properties
-            ChaosUseDetails chaosAbilities = chaosEmeraldCap.chaosUseDetails;
+            ChaosAbilityDetails chaosAbilities = chaosEmeraldCap.chaosAbilityDetails;
 
             //Activate Teleport
-            if (chaosAbilities.teleport == 0 && chaosEmeraldCap.chaosCooldownKey[EmeraldAbility.CHAOS_CONTROL.ordinal()] == 0 && chaosAbilities.timeStop == 0) {
+            if (chaosAbilities.teleport == 0 && chaosEmeraldCap.chaosCooldownKey[EmeraldAbility.CHAOS_CONTROL.ordinal()] == 0 && !chaosAbilities.abilityInUse()) {
                 chaosAbilities.teleport = -ChaosEmeraldHandler.TELEPORT_BUILDUP;
                 player.displayClientMessage(Component.translatable("Chaos Control!").withStyle(Style.EMPTY.withColor(chaosAbilities.useColor)),true);
             }
@@ -43,8 +42,8 @@ public class ChaosTeleport
                 chaosAbilities.useColor = Integer.MIN_VALUE;
             }
 
-            //Time Stop Active
-            else if(chaosAbilities.timeStop > 0)
+            //Other Ability Active
+            else if(chaosAbilities.abilityInUse())
             {
                 player.displayClientMessage(Component.translatable("That Ability cannot be used currently").withStyle(Style.EMPTY.withColor(chaosAbilities.useColor)),true);
             }
@@ -83,7 +82,7 @@ public class ChaosTeleport
         player.getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(chaosEmeraldCap ->
         {
             //Fetch Ability Properties
-            ChaosUseDetails chaosAbilities = chaosEmeraldCap.chaosUseDetails;
+            ChaosAbilityDetails chaosAbilities = chaosEmeraldCap.chaosAbilityDetails;
 
             //Reset Data
             chaosAbilities.teleport = 0;

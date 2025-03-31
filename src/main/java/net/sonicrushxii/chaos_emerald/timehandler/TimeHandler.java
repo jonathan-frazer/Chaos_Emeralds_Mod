@@ -7,7 +7,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.sonicrushxii.chaos_emerald.capabilities.ChaosEmeraldProvider;
-import net.sonicrushxii.chaos_emerald.capabilities.all.ChaosUseDetails;
+import net.sonicrushxii.chaos_emerald.capabilities.all.ChaosAbilityDetails;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -30,9 +30,9 @@ public class TimeHandler {
                 {
                     player.getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(chaosEmeraldCap -> {
                         //Fetch Ability Properties
-                        ChaosUseDetails chaosAbilities = chaosEmeraldCap.chaosUseDetails;
+                        ChaosAbilityDetails chaosAbility = chaosEmeraldCap.chaosAbilityDetails;
 
-                        if(chaosAbilities.timeStop > 0 || chaosAbilities.teleport > 0) {
+                        if(chaosAbility.stoppingTime()) {
                             world.tickRateManager().setFrozen(true);
                             foundTimeStopper.set(true);
                         }

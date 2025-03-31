@@ -7,8 +7,10 @@ import net.minecraftforge.event.network.CustomPayloadEvent;
 import net.sonicrushxii.chaos_emerald.KeyBindings;
 import net.sonicrushxii.chaos_emerald.block.ChaosBlockItem;
 import net.sonicrushxii.chaos_emerald.capabilities.ChaosEmeraldProvider;
-import net.sonicrushxii.chaos_emerald.capabilities.all.ChaosUseDetails;
+import net.sonicrushxii.chaos_emerald.capabilities.all.ChaosAbilityDetails;
 import net.sonicrushxii.chaos_emerald.network.PacketHandler;
+import net.sonicrushxii.chaos_emerald.network.common.ChaosBoost;
+import net.sonicrushxii.chaos_emerald.network.common.ChaosDimensionChange;
 import net.sonicrushxii.chaos_emerald.network.common.ChaosTeleport;
 import net.sonicrushxii.chaos_emerald.network.common.TimeStop;
 
@@ -39,16 +41,24 @@ public class KeyPress {
 
                         player.getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(chaosEmeraldCap -> {
                             //Set Color
-                            ChaosUseDetails chaosAbilities = chaosEmeraldCap.chaosUseDetails;
+                            ChaosAbilityDetails chaosAbilities = chaosEmeraldCap.chaosAbilityDetails;
                             chaosAbilities.useColor = ChaosBlockItem.getEmeraldColorInHand(player);
 
                             //Time Stop
-                            if (this.keyMapping == KeyBindings.INSTANCE.chaosTimeStop.getKey().getValue())
+                            if (this.keyMapping == KeyBindings.INSTANCE.chaosTimeStop.getKey().getValue() && !player.isShiftKeyDown())
                                 TimeStop.keyPress(player);
 
+                            //Chaos Boost
+                            else if(this.keyMapping == KeyBindings.INSTANCE.chaosTimeStop.getKey().getValue() && player.isShiftKeyDown())
+                                ChaosBoost.keyPress(player);
+
                             //Teleport
-                            else if (this.keyMapping == KeyBindings.INSTANCE.chaosTeleport.getKey().getValue())
+                            else if (this.keyMapping == KeyBindings.INSTANCE.chaosTeleport.getKey().getValue() && !player.isShiftKeyDown())
                                 ChaosTeleport.keyPress(player);
+
+                            //Dimension Teleport
+                            else if (this.keyMapping == KeyBindings.INSTANCE.chaosTeleport.getKey().getValue() && player.isShiftKeyDown())
+                                ChaosDimensionChange.keyPress(player);
 
                             //Put Color back to normal
                             else chaosAbilities.useColor = Integer.MIN_VALUE;

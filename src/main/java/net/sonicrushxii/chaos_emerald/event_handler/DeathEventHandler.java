@@ -30,6 +30,10 @@ public class DeathEventHandler {
             event.getOriginal().getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(oldStore->{
                 event.getOriginal().getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(newStore->{
                     newStore.copyDeathFrom(oldStore);
+                    String targetDimension = String.valueOf(event.getOriginal().level().dimension().location());
+                    //Prevent your Dimension from being the Same
+                    newStore.chaosAbilityDetails.targetDimension = (targetDimension.equals(oldStore.chaosAbilityDetails.targetDimension))?"minecraft:the_nether":targetDimension;
+
                 });
             });
         }
