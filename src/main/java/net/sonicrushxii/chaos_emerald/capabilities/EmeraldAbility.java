@@ -13,8 +13,7 @@ public enum EmeraldAbility
 
     private final Integer color;
 
-    EmeraldAbility(Integer color)
-    {
+    EmeraldAbility(Integer color) {
         this.color = color;
     }
 

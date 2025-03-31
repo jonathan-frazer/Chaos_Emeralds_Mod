@@ -97,12 +97,4 @@ public class ChaosEmeraldCap
         //Chaos Emerald Abilities
         this.chaosAbilityDetails = new ChaosAbilityDetails(nbt.getCompound("ChaosAbilities"));
     }
-
-    public boolean isUsingActiveAbility()
-    {
-        boolean timestop = this.chaosUseDetails.teleport > 0;
-        boolean teleport = this.chaosUseDetails.timeStop > 0;
-
-        return timestop || teleport;
-    }
 }

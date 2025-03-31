@@ -3,20 +3,26 @@ package net.sonicrushxii.chaos_emerald.event_handler.custom;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import net.sonicrushxii.chaos_emerald.Utilities;
 import net.sonicrushxii.chaos_emerald.capabilities.ChaosEmeraldProvider;
 import net.sonicrushxii.chaos_emerald.capabilities.EmeraldAbility;
 import net.sonicrushxii.chaos_emerald.capabilities.all.ChaosAbilityDetails;
+import net.sonicrushxii.chaos_emerald.modded.ModEffects;
 import net.sonicrushxii.chaos_emerald.modded.ModSounds;
 import net.sonicrushxii.chaos_emerald.network.PacketHandler;
 import net.sonicrushxii.chaos_emerald.network.all.EmeraldDataSyncS2C;
 import net.sonicrushxii.chaos_emerald.network.all.ParticleAuraPacketS2C;
+import net.sonicrushxii.chaos_emerald.network.all.SyncEntityMotionS2C;
 import net.sonicrushxii.chaos_emerald.network.common.ChaosBoost;
 import net.sonicrushxii.chaos_emerald.network.common.ChaosDimensionChange;
 import net.sonicrushxii.chaos_emerald.network.common.ChaosTeleport;
@@ -45,15 +51,188 @@ public class ChaosEmeraldHandler
     public static final byte DIMENSION_TP_BUILDUP = 10; //In Ticks
     public static final byte DIMENSION_TP_COOLDOWN = 5; // In Seconds
 
+    //Cooldowns
+    private static final int AQUA_EMERALD_CD = 1;
+    private static final int BLUE_EMERALD_CD = 1;
+    private static final int GREEN_EMERALD_CD = 1;
+    private static final int GREY_EMERALD_CD = 1;
+    private static final int PURPLE_EMERALD_CD = 1;
+    private static final int RED_EMERALD_CD = 1;
+    private static final int YELLOW_EMERALD_CD = 1;
+
+    //Red Emerald
+    private static final int BULLET_FALLOFF = 5;
+
+    public static void aquaEmeraldUse(Level pLevel, Player pPlayer) {
+        if (pPlayer instanceof ServerPlayer player) {
+            player.getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(chaosEmeraldCap -> {
+                ChaosAbilityDetails chaosAbility = chaosEmeraldCap.chaosAbilityDetails;
+                if (chaosAbility.abilityInUse()) return;
+
+                if (chaosEmeraldCap.chaosCooldownKey[EmeraldAbility.AQUA_EMERALD.ordinal()] > 0) {
+                    player.displayClientMessage(Component.translatable("That Ability is not Ready Yet").withStyle(Style.EMPTY.withColor(EmeraldAbility.AQUA_EMERALD.color())), true);
+                    return;
+                }
+
+                //Set Cooldown(in Seconds)
+                chaosEmeraldCap.chaosCooldownKey[EmeraldAbility.AQUA_EMERALD.ordinal()] = AQUA_EMERALD_CD;
+
+                PacketHandler.sendToALLPlayers(new EmeraldDataSyncS2C(
+                        player.getId(), chaosEmeraldCap
+                ));
+            });
+        }
+    }
+
+    public static void blueEmeraldUse(Level pLevel, Player pPlayer) {
+        if (pPlayer instanceof ServerPlayer player) {
+            player.getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(chaosEmeraldCap -> {
+                ChaosAbilityDetails chaosAbility = chaosEmeraldCap.chaosAbilityDetails;
+                if (chaosAbility.abilityInUse()) return;
+
+                if (chaosEmeraldCap.chaosCooldownKey[EmeraldAbility.BLUE_EMERALD.ordinal()] > 0) {
+                    player.displayClientMessage(Component.translatable("That Ability is not Ready Yet").withStyle(Style.EMPTY.withColor(EmeraldAbility.BLUE_EMERALD.color())), true);
+                    return;
+                }
+
+                //Set Cooldown(in Seconds)
+                chaosEmeraldCap.chaosCooldownKey[EmeraldAbility.BLUE_EMERALD.ordinal()] = BLUE_EMERALD_CD;
+
+                PacketHandler.sendToALLPlayers(new EmeraldDataSyncS2C(
+                        player.getId(), chaosEmeraldCap
+                ));
+            });
+        }
+    }
+
+    public static void greenEmeraldUse(Level pLevel, Player pPlayer) {
+        if (pPlayer instanceof ServerPlayer player) {
+            player.getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(chaosEmeraldCap -> {
+                ChaosAbilityDetails chaosAbility = chaosEmeraldCap.chaosAbilityDetails;
+                if (chaosAbility.abilityInUse()) return;
+
+                if (chaosEmeraldCap.chaosCooldownKey[EmeraldAbility.GREEN_EMERALD.ordinal()] > 0) {
+                    player.displayClientMessage(Component.translatable("That Ability is not Ready Yet").withStyle(Style.EMPTY.withColor(EmeraldAbility.GREEN_EMERALD.color())), true);
+                    return;
+                }
+
+                chaosEmeraldCap.chaosCooldownKey[EmeraldAbility.GREEN_EMERALD.ordinal()] = GREEN_EMERALD_CD;
+
+                PacketHandler.sendToALLPlayers(new EmeraldDataSyncS2C(
+                        player.getId(), chaosEmeraldCap
+                ));
+            });
+        }
+    }
+
+    public static void greyEmeraldUse(Level pLevel, Player pPlayer) {
+        if (pPlayer instanceof ServerPlayer player) {
+            player.getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(chaosEmeraldCap -> {
+                ChaosAbilityDetails chaosAbility = chaosEmeraldCap.chaosAbilityDetails;
+                if (chaosAbility.abilityInUse()) return;
+
+                if (chaosEmeraldCap.chaosCooldownKey[EmeraldAbility.GREY_EMERALD.ordinal()] > 0) {
+                    player.displayClientMessage(Component.translatable("That Ability is not Ready Yet").withStyle(Style.EMPTY.withColor(EmeraldAbility.GREY_EMERALD.color())), true);
+                    return;
+                }
+
+                chaosEmeraldCap.chaosCooldownKey[EmeraldAbility.GREY_EMERALD.ordinal()] = GREY_EMERALD_CD;
+
+                PacketHandler.sendToALLPlayers(new EmeraldDataSyncS2C(
+                        player.getId(), chaosEmeraldCap
+                ));
+            });
+        }
+    }
+
+    public static void purpleEmeraldUse(Level pLevel, Player pPlayer) {
+        if (pPlayer instanceof ServerPlayer player) {
+            player.getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(chaosEmeraldCap -> {
+                ChaosAbilityDetails chaosAbility = chaosEmeraldCap.chaosAbilityDetails;
+                if (chaosAbility.abilityInUse()) return;
+
+                if (chaosEmeraldCap.chaosCooldownKey[EmeraldAbility.PURPLE_EMERALD.ordinal()] > 0) {
+                    player.displayClientMessage(Component.translatable("That Ability is not Ready Yet").withStyle(Style.EMPTY.withColor(EmeraldAbility.PURPLE_EMERALD.color())), true);
+                    return;
+                }
+
+                chaosEmeraldCap.chaosCooldownKey[EmeraldAbility.PURPLE_EMERALD.ordinal()] = PURPLE_EMERALD_CD;
+
+                PacketHandler.sendToALLPlayers(new EmeraldDataSyncS2C(
+                        player.getId(), chaosEmeraldCap
+                ));
+            });
+        }
+    }
+
+    public static void redEmeraldUse(Level pLevel, Player pPlayer) {
+        if (pPlayer instanceof ServerPlayer player) {
+            player.getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(chaosEmeraldCap -> {
+                ChaosAbilityDetails chaosAbility = chaosEmeraldCap.chaosAbilityDetails;
+                if (chaosAbility.abilityInUse()) return;
+
+                //Cancel Ability
+                if (chaosEmeraldCap.chaosCooldownKey[EmeraldAbility.RED_EMERALD.ordinal()] > 0) {
+                    player.displayClientMessage(Component.translatable("That Ability is not Ready Yet").withStyle(Style.EMPTY.withColor(EmeraldAbility.RED_EMERALD.color())), true);
+                    return;
+                }
+
+                //Dash
+                Vec3 vec3 = player.getLookAngle().scale(1.5F);
+                player.setDeltaMovement(vec3);
+                PacketHandler.sendToALLPlayers(new SyncEntityMotionS2C(pPlayer.getId(),pPlayer.getDeltaMovement()));
+                pLevel.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.BLAZE_SHOOT, SoundSource.PLAYERS, 1.0F, 1.0F);
+                PacketHandler.sendToALLPlayers(new ParticleAuraPacketS2C(
+                        ParticleTypes.FLAME,
+                        pPlayer.getX(), pPlayer.getY()+pPlayer.getEyeHeight()/2, pPlayer.getZ(),
+                        0.001, 0.25f, 0.25f, 0.25f, 100,
+                        true)
+                );
+                //Negate Fall Damage
+                MobEffectInstance freezeEffect = new MobEffectInstance(ModEffects.FALL_DAMAGE_NEGATE.get(), BULLET_FALLOFF*20, 0, false, false, false);
+                if(player.hasEffect(ModEffects.PLAYER_TIME_FREEZE.get()))
+                    player.getEffect(ModEffects.PLAYER_TIME_FREEZE.get()).update(freezeEffect);
+                else
+                    player.addEffect(freezeEffect,player);
+
+                //Set Cooldown(in Seconds)
+                chaosEmeraldCap.chaosCooldownKey[EmeraldAbility.RED_EMERALD.ordinal()] = RED_EMERALD_CD;
+
+                PacketHandler.sendToALLPlayers(new EmeraldDataSyncS2C(
+                        player.getId(), chaosEmeraldCap
+                ));
+            });
+        }
+    }
+
+    public static void yellowEmeraldUse(Level pLevel, Player pPlayer) {
+        if (pPlayer instanceof ServerPlayer player) {
+            player.getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(chaosEmeraldCap -> {
+                ChaosAbilityDetails chaosAbility = chaosEmeraldCap.chaosAbilityDetails;
+                if (chaosAbility.abilityInUse()) return;
+
+                if (chaosEmeraldCap.chaosCooldownKey[EmeraldAbility.YELLOW_EMERALD.ordinal()] > 0) {
+                    player.displayClientMessage(Component.translatable("That Ability is not Ready Yet").withStyle(Style.EMPTY.withColor(EmeraldAbility.YELLOW_EMERALD.color())), true);
+                    return;
+                }
+
+                chaosEmeraldCap.chaosCooldownKey[EmeraldAbility.YELLOW_EMERALD.ordinal()] = YELLOW_EMERALD_CD;
+
+                PacketHandler.sendToALLPlayers(new EmeraldDataSyncS2C(
+                        player.getId(), chaosEmeraldCap
+                ));
+            });
+        }
+    }
+    
+            
     public static void serverTick(ServerPlayer player, int tick)
     {
         Level world = player.level();
 
         player.getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(chaosEmeraldCap ->
         {
-            //Fetch Ability Properties
             ChaosAbilityDetails chaosAbilities = chaosEmeraldCap.chaosAbilityDetails;
-
             //Time Stop
             {
                 //Buildup
@@ -288,6 +467,12 @@ public class ChaosEmeraldHandler
                     //Change Dimensions
                     ChaosDimensionChange.performDimensionChange(player);
                 }
+            }
+
+            //Chaos Color Abilities
+            {
+                //Red Emerald
+                {}
             }
 
             PacketHandler.sendToALLPlayers(new EmeraldDataSyncS2C(player.getId(),chaosEmeraldCap));

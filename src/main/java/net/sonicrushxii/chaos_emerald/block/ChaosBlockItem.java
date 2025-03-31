@@ -11,7 +11,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.sonicrushxii.chaos_emerald.capabilities.EmeraldType;
+import net.sonicrushxii.chaos_emerald.capabilities.EmeraldAbility;
 import net.sonicrushxii.chaos_emerald.event_handler.custom.ChaosEmeraldHandler;
 
 import java.util.StringTokenizer;
@@ -53,13 +53,13 @@ public class ChaosBlockItem extends BlockItem {
         //Get Last Token
         return switch (sg.nextToken())
         {
-            case "aqua_emerald" -> EmeraldType.AQUA_EMERALD.color();
-            case "blue_emerald" -> EmeraldType.BLUE_EMERALD.color();
-            case "green_emerald" -> EmeraldType.GREEN_EMERALD.color();
-            case "grey_emerald" -> EmeraldType.GREY_EMERALD.color();
-            case "purple_emerald" -> EmeraldType.PURPLE_EMERALD.color();
-            case "red_emerald" -> EmeraldType.RED_EMERALD.color();
-            case "yellow_emerald" -> EmeraldType.YELLOW_EMERALD.color();
+            case "aqua_emerald" -> EmeraldAbility.AQUA_EMERALD.color();
+            case "blue_emerald" -> EmeraldAbility.BLUE_EMERALD.color();
+            case "green_emerald" -> EmeraldAbility.GREEN_EMERALD.color();
+            case "grey_emerald" -> EmeraldAbility.GREY_EMERALD.color();
+            case "purple_emerald" -> EmeraldAbility.PURPLE_EMERALD.color();
+            case "red_emerald" -> EmeraldAbility.RED_EMERALD.color();
+            case "yellow_emerald" -> EmeraldAbility.YELLOW_EMERALD.color();
             default -> Integer.MIN_VALUE;
         };
     }

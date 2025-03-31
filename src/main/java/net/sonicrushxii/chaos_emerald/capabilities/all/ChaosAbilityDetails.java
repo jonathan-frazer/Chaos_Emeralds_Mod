@@ -20,6 +20,9 @@ public class ChaosAbilityDetails
     //Chaos Boost
     public byte buffBoost;
 
+    //Emerald Abilities
+    public byte redEmerald;
+
     public ChaosAbilityDetails()
     {
         useColor = Integer.MIN_VALUE;
@@ -34,6 +37,8 @@ public class ChaosAbilityDetails
         previousDimensionPos = new int[5];
         //Chaos Boost
         buffBoost = 0;
+        //Emerald Abilities
+        redEmerald = 0;
     }
 
     public ChaosAbilityDetails(CompoundTag nbt)
@@ -53,6 +58,9 @@ public class ChaosAbilityDetails
 
         //Chaos Boost
         buffBoost = nbt.contains("ChaosBoost")?nbt.getByte("ChaosBoost"):0;
+
+        //Emerald Abilities
+        redEmerald = nbt.contains("RedEmerald")?nbt.getByte("RedEmerald"):0;
     }
 
     public CompoundTag serialize()
@@ -75,6 +83,9 @@ public class ChaosAbilityDetails
         //Chaos Boost
         if(buffBoost != 0)                                              nbt.putByte("ChaosBoost",buffBoost);
 
+        //Emerald Abilities
+        if(redEmerald != 0)                                              nbt.putByte("RedEmerald",redEmerald);
+
         return nbt;
     }
 
@@ -85,6 +96,6 @@ public class ChaosAbilityDetails
 
     public boolean abilityInUse()
     {
-        return this.stoppingTime() || this.dimTeleport > 0 || this.buffBoost > 0;
+        return this.stoppingTime() || this.dimTeleport > 0 || this.buffBoost > 0 || this.redEmerald > 0;
     }
 }
