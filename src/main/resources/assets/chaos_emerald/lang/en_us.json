@@ -27,5 +27,7 @@
 
   "creativetab.chaos_emerald": "Chaos Emerald Tab",
 
-  "effect.chaos_emerald.player_time_freeze": "Frozen in Time"
+  "effect.chaos_emerald.player_time_freeze": "Frozen in Time",
+  "effect.chaos_emerald.fall_damage_negate": "No Fall Dmg",
+  "That Ability is not Ready Yet": "That Ability is not Ready Yet"
 }

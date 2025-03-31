@@ -11,6 +11,8 @@ public class ChaosUseDetails
     public byte timeStop;
     //Teleport
     public byte teleport;
+    //Red Emerald
+    public byte redEmerald;
 
     public ChaosUseDetails()
     {
@@ -20,6 +22,8 @@ public class ChaosUseDetails
         timeStop = 0;
         //Teleport Info
         teleport = 0;
+        //Red Emerald Info
+        redEmerald = 0;
     }
 
     public ChaosUseDetails(CompoundTag nbt)
@@ -30,6 +34,8 @@ public class ChaosUseDetails
         timeStop = nbt.contains("Timestop")?nbt.getByte("Timestop"):0;
         //Teleport Info
         teleport = nbt.contains("Teleport")?nbt.getByte("Teleport"):0;
+        //Red Emerald Info
+        redEmerald = nbt.contains("RedEmerald")?nbt.getByte("RedEmerald"):0;
     }
 
     public CompoundTag serialize()
@@ -42,6 +48,8 @@ public class ChaosUseDetails
         if(timeStop != 0)                   nbt.putByte("Timestop",timeStop);
         //Teleport
         if(teleport != 0)                   nbt.putByte("Teleport",teleport);
+        //Red Emerald
+        if(redEmerald != 0)                 nbt.putByte("RedEmerald",redEmerald);
 
         return nbt;
     }

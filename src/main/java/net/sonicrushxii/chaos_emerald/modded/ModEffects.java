@@ -9,6 +9,7 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import net.sonicrushxii.chaos_emerald.ChaosEmerald;
+import net.sonicrushxii.chaos_emerald.potion_effects.FallDamageNegation;
 import net.sonicrushxii.chaos_emerald.potion_effects.PlayerTimeFreeze;
 
 public class ModEffects {
@@ -19,6 +20,9 @@ public class ModEffects {
             "player_time_freeze",()->((new PlayerTimeFreeze(MobEffectCategory.HARMFUL,0xFF0000)
                     .addAttributeModifier(ForgeMod.ENTITY_GRAVITY.get(), "A1B2C3D4-E5F6-7890-ABCD-EF1234567890", -1.0, AttributeModifier.Operation.MULTIPLY_TOTAL)))
     );
+    public static final RegistryObject<MobEffect> FALL_DAMAGE_NEGATE = MOB_EFFECTS.register(
+            "fall_damage_negate",()->((new FallDamageNegation(MobEffectCategory.BENEFICIAL,0xFFFFFF))
+            ));
     public static void register(IEventBus eventBus)
     {
         MOB_EFFECTS.register(eventBus);

@@ -12,6 +12,7 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.sonicrushxii.chaos_emerald.capabilities.EmeraldType;
+import net.sonicrushxii.chaos_emerald.event_handler.custom.ChaosEmeraldHandler;
 
 import java.util.StringTokenizer;
 
@@ -74,25 +75,25 @@ public class ChaosBlockItem extends BlockItem {
         switch(sg.nextToken())
         {
             case "aqua_emerald":
-                System.out.println("aquaEmeraldUse(pLevel,pPlayer)");
+                ChaosEmeraldHandler.aquaEmeraldUse(pLevel, pPlayer);
                 break;
             case "blue_emerald":
-                System.out.println("blueEmeraldUse(pLevel,pPlayer)");
+                ChaosEmeraldHandler.blueEmeraldUse(pLevel, pPlayer);
                 break;
             case "green_emerald":
-                System.out.println("greenEmeraldUse(pLevel,pPlayer)");
+                ChaosEmeraldHandler.greenEmeraldUse(pLevel, pPlayer);
                 break;
             case "grey_emerald":
-                System.out.println("greyEmeraldUse(pLevel,pPlayer)");
+                ChaosEmeraldHandler.greyEmeraldUse(pLevel, pPlayer);
                 break;
             case "purple_emerald":
-                System.out.println("purpleEmeraldUse(pLevel,pPlayer)");
+                ChaosEmeraldHandler.purpleEmeraldUse(pLevel, pPlayer);
                 break;
             case "red_emerald":
-                System.out.println("redEmeraldUse(pLevel,pPlayer)");
+                ChaosEmeraldHandler.redEmeraldUse(pLevel, pPlayer);
                 break;
             case "yellow_emerald":
-                System.out.println("yellowEmeraldUse(pLevel,pPlayer)");
+                ChaosEmeraldHandler.yellowEmeraldUse(pLevel, pPlayer);
                 break;
             default: return false;
         }
