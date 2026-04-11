@@ -159,6 +159,13 @@ public class ChaosEmerald
         @SubscribeEvent
         public static void registerKeys(RegisterKeyMappingsEvent event){
             event.register(KeyBindings.INSTANCE.transformButton);
+            event.register(KeyBindings.INSTANCE.useAbility1);
+            event.register(KeyBindings.INSTANCE.useAbility2);
+            event.register(KeyBindings.INSTANCE.useAbility3);
+            event.register(KeyBindings.INSTANCE.useAbility4);
+            event.register(KeyBindings.INSTANCE.useAbility5);
+            event.register(KeyBindings.INSTANCE.useAbility6);
+            event.register(KeyBindings.INSTANCE.doubleJump);
         }
 
         @SubscribeEvent

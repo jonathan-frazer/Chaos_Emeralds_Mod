@@ -254,10 +254,12 @@ public class HyperFormHandler
                     }
                 }catch (ClassCastException ignored) {}
             }
-            //Sync Data to Client
-            PacketHandler.sendToALLPlayers(new EmeraldDataSyncS2C(
-                    player.getId(),chaosEmeraldCap
-            ));
+            // Sync every tick during transformation animation; once per second otherwise.
+            if (chaosEmeraldCap.hyperFormTimer < 0 || tick == 0) {
+                PacketHandler.sendToALLPlayers(new EmeraldDataSyncS2C(
+                        player.getId(),chaosEmeraldCap
+                ));
+            }
         });
     }
 

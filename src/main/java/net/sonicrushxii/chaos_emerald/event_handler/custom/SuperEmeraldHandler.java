@@ -824,9 +824,13 @@ public class SuperEmeraldHandler {
 
             }finally
             {
-                PacketHandler.sendToALLPlayers( new EmeraldDataSyncS2C(
-                        player.getId(),chaosEmeraldCap
-                ));
+                // Only sync once per second; individual activation methods already
+                // send an immediate sync when an ability first fires.
+                if (tick == 0) {
+                    PacketHandler.sendToALLPlayers(new EmeraldDataSyncS2C(
+                            player.getId(), chaosEmeraldCap
+                    ));
+                }
             }
         });
     }

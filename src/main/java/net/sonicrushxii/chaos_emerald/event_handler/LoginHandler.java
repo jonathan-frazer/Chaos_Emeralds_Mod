@@ -12,7 +12,9 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.sonicrushxii.chaos_emerald.event_handler.client_specific.ClientLoginHandler;
 import net.sonicrushxii.chaos_emerald.modded.ModEffects;
+import net.sonicrushxii.chaos_emerald.capabilities.ChaosEmeraldProvider;
 import net.sonicrushxii.chaos_emerald.network.PacketHandler;
+import net.sonicrushxii.chaos_emerald.network.all.EmeraldDataSyncS2C;
 import net.sonicrushxii.chaos_emerald.network.aqua.BindEffectSyncPacketS2C;
 
 import java.util.*;
@@ -38,6 +40,12 @@ public class LoginHandler
 
     private void onServerLogin(ServerPlayer player)
     {
+        // Sync the player's own capability data to their client so they start
+        // with the correct cooldowns, timers, and form state immediately on join.
+        player.getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(cap ->
+            PacketHandler.sendToPlayer(player, new EmeraldDataSyncS2C(player.getId(), cap))
+        );
+
         //Update the Effects on Server Side
         ServerLevel world = player.serverLevel();
         for(Entity entity : world.getAllEntities())

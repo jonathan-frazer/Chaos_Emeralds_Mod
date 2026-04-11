@@ -221,10 +221,15 @@ public class SuperFormHandler
                 }catch (ClassCastException ignored) {}
             }
 
-            //Sync Data to Client
-            PacketHandler.sendToALLPlayers(new EmeraldDataSyncS2C(
-                    player.getId(),chaosEmeraldCap
-            ));
+            // Sync data to all clients. During the transformation animation the timer
+            // changes every tick and must be kept in sync; once the form is active,
+            // syncing once per second (tick==0) is sufficient and avoids flooding the
+            // network with 20 identical packets per second per player.
+            if (chaosEmeraldCap.superFormTimer < 0 || tick == 0) {
+                PacketHandler.sendToALLPlayers(new EmeraldDataSyncS2C(
+                        player.getId(),chaosEmeraldCap
+                ));
+            }
         });
     }
 

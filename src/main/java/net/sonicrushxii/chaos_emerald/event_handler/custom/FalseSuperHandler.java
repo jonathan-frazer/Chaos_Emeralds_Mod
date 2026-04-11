@@ -240,9 +240,12 @@ public class FalseSuperHandler
                     }
                 }
             }
-            PacketHandler.sendToALLPlayers(new EmeraldDataSyncS2C(
-                    player.getId(),chaosEmeraldCap
-            ));
+            // Sync every tick during transformation animation; once per second otherwise.
+            if (chaosEmeraldCap.falseSuperTimer < 0 || serverTick == 0) {
+                PacketHandler.sendToALLPlayers(new EmeraldDataSyncS2C(
+                        player.getId(),chaosEmeraldCap
+                ));
+            }
         });
     }
 

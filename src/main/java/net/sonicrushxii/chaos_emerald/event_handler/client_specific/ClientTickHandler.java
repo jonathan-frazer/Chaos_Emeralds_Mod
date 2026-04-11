@@ -11,6 +11,12 @@ public class ClientTickHandler {
 
     public static void clientPlayerTick(Player pPlayer)
     {
+        // Only process the local player. PlayerTickEvent fires for every player
+        // entity visible on this client, so without this guard the tick counter
+        // would advance N times per game tick and ability packets would be sent
+        // N times per key press with N nearby players.
+        if (pPlayer != net.minecraft.client.Minecraft.getInstance().player) return;
+
         //Local Player Tick
         if(pPlayer instanceof AbstractClientPlayer player)
         {

@@ -14,8 +14,13 @@ public class SuperFormProperties extends FormProperties
 
     public SuperFormProperties(CompoundTag nbt)
     {
-        //Common
-        abilityCooldowns = nbt.getByteArray("AbilityCooldowns");
+        byte[] loaded = nbt.getByteArray("AbilityCooldowns");
+        // Guard against a missing or wrong-length array (e.g. first load after
+        // a new ability is added to the enum) to prevent ArrayIndexOutOfBounds.
+        if (loaded.length == SuperFormAbility.values().length)
+            abilityCooldowns = loaded;
+        else
+            abilityCooldowns = new byte[SuperFormAbility.values().length];
     }
 
     @Override

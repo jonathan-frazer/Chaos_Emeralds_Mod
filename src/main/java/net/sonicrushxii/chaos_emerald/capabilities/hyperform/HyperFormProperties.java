@@ -19,7 +19,12 @@ public class HyperFormProperties extends FormProperties
 
     public HyperFormProperties(CompoundTag nbt)
     {
-        abilityCooldowns = nbt.getByteArray("AbilityCooldowns");
+        byte[] loaded = nbt.getByteArray("AbilityCooldowns");
+        // Guard against a missing or wrong-length array.
+        if (loaded.length == HyperFormAbility.values().length)
+            abilityCooldowns = loaded;
+        else
+            abilityCooldowns = new byte[HyperFormAbility.values().length];
         chaosBlastEXTimer = nbt.getInt("ChaosBlastEXTimer");
         hasHyperDoubleJump = nbt.getBoolean("hasDoubleJump");
     }

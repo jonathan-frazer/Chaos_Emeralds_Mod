@@ -33,9 +33,11 @@ public class DeathEventHandler {
     @SubscribeEvent
     public void onPlayerCloned(PlayerEvent.Clone event){
         if(event.isWasDeath()){
-            //Add Other Capabilities from here
+            // Copy capability data from the original (dead) player to the new
+            // player instance. Previously both getCapability calls used
+            // getOriginal(), so the new player never actually received the data.
             event.getOriginal().getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(oldStore->{
-                event.getOriginal().getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(newStore->{
+                event.getEntity().getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(newStore->{
                     newStore.copyFrom(oldStore);
                 });
             });

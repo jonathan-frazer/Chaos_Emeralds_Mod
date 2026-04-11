@@ -55,6 +55,22 @@ public class ChaosEmeraldHandler {
     private static final int RED_EMERALD_CD = 15;
     private static final int YELLOW_EMERALD_CD = 10;
 
+    // Cost: 1 hunger point per ability use (spec: "Costs 1 hunger to use each to prevent spam")
+    private static final int ABILITY_HUNGER_COST = 1;
+
+    /** Returns true and deducts hunger if the player can afford the ability cost. */
+    private static boolean consumeHunger(ServerPlayer player) {
+        int food = player.getFoodData().getFoodLevel();
+        if (food < ABILITY_HUNGER_COST) {
+            player.displayClientMessage(
+                Component.literal("Not enough hunger to use that ability.")
+                    .withStyle(Style.EMPTY.withColor(0xFF5500)), true);
+            return false;
+        }
+        player.getFoodData().setFoodLevel(food - ABILITY_HUNGER_COST);
+        return true;
+    }
+
     public static void aquaEmeraldUse(Level pLevel, Player pPlayer)
     {
         if(pPlayer instanceof ServerPlayer player)
@@ -66,6 +82,8 @@ public class ChaosEmeraldHandler {
                     player.displayClientMessage(Component.translatable("That Ability is not Ready Yet").withStyle(Style.EMPTY.withColor(0x00FFFF)),true);
                     return;
                 }
+
+                if(!consumeHunger(player)) return;
 
                 Vec3 lookAngle = player.getLookAngle().scale(2);
                 Vec3 displayPos = new Vec3(
@@ -129,6 +147,8 @@ public class ChaosEmeraldHandler {
                     return;
                 }
 
+                if(!consumeHunger(player)) return;
+
                 Vec3 spawnPos = new Vec3(player.getX()+player.getLookAngle().x,
                         player.getY()+player.getLookAngle().y+1.0,
                         player.getZ()+player.getLookAngle().z);
@@ -163,6 +183,8 @@ public class ChaosEmeraldHandler {
                     player.displayClientMessage(Component.translatable("That Ability is not Ready Yet").withStyle(Style.EMPTY.withColor(0x00FF00)),true);
                     return;
                 }
+
+                if(!consumeHunger(player)) return;
 
                 Vec3 currentPos = new Vec3(player.getX(),player.getY(),player.getZ());
                 Vec3 lookAngle = player.getLookAngle();
@@ -252,6 +274,8 @@ public class ChaosEmeraldHandler {
                     return;
                 }
 
+                if(!consumeHunger((ServerPlayer) pPlayer)) return;
+
                 //Activate Grey Emerald
                 if(chaosEmeraldCap.greyChaosUse == 0) chaosEmeraldCap.greyChaosUse = 1;
 
@@ -272,6 +296,8 @@ public class ChaosEmeraldHandler {
                     return;
                 }
 
+                if(!consumeHunger((ServerPlayer) pPlayer)) return;
+
                 //Launch up
                 Objects.requireNonNull(pPlayer.getAttribute(ForgeMod.ENTITY_GRAVITY.get())).setBaseValue(0.0);
                 Objects.requireNonNull(pPlayer.getAttribute(Attributes.KNOCKBACK_RESISTANCE)).setBaseValue(1.0);
@@ -280,6 +306,10 @@ public class ChaosEmeraldHandler {
 
                 //Activate Purple Emerald
                 if(chaosEmeraldCap.purpleChaosUse == 0) chaosEmeraldCap.purpleChaosUse = 1;
+
+                PacketHandler.sendToALLPlayers(new EmeraldDataSyncS2C(
+                        pPlayer.getId(),chaosEmeraldCap
+                ));
             });
     }
 
@@ -296,6 +326,8 @@ public class ChaosEmeraldHandler {
                     pPlayer.displayClientMessage(Component.translatable("That Ability is not Ready Yet").withStyle(Style.EMPTY.withColor(0xFF0000)),true);
                     return;
                 }
+
+                if(!consumeHunger((ServerPlayer) pPlayer)) return;
 
                 //Launch up
                 pPlayer.setDeltaMovement(0,1.0,0);
@@ -373,6 +405,8 @@ public class ChaosEmeraldHandler {
                     pPlayer.displayClientMessage(Component.translatable("That Ability is not Ready Yet").withStyle(Style.EMPTY.withColor(0xFFFF00)),true);
                     return;
                 }
+
+                if(!consumeHunger((ServerPlayer) pPlayer)) return;
 
                 Vec3 spawnPos = new Vec3(pPlayer.getX()+pPlayer.getLookAngle().x,
                         pPlayer.getY()+pPlayer.getLookAngle().y+1.0,
