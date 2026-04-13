@@ -62,7 +62,7 @@ public class CuriosBonusHandler {
         Item item = event.getObject().getItem();
         if (!isSuperEmerald(item)) return;
 
-        ICurio curio = buildCurio(item);
+        ICurio curio = buildCurio(event.getObject());
         LazyOptional<ICurio> opt = LazyOptional.of(() -> curio);
 
         event.addCapability(CURIO_KEY, new ICapabilityProvider() {
@@ -111,13 +111,19 @@ public class CuriosBonusHandler {
     /**
      * Builds the {@link ICurio} implementation for {@code item}.
      * <p>
-     * Purple uses {@link #getAttributeModifiers} to give a static Luck bonus (Fortune
+     * Purple uses #getAttributeModifiers to give a static Luck bonus (Fortune
      * analogue); all other effect-based emeralds refresh a potion effect in
-     * {@link #curioTick} once per second so the effect never expires while equipped.
+     * #curioTick once per second so the effect never expires while equipped.
      * Green has no tick action — its bonus is applied in {@link #onLootingLevel}.
      */
-    private static ICurio buildCurio(Item item) {
+    private static ICurio buildCurio(ItemStack stack) {
+        Item item = stack.getItem();
         return new ICurio() {
+
+            @Override
+            public ItemStack getStack() {
+                return stack;
+            }
 
             @Override
             public void curioTick(SlotContext slotContext) {

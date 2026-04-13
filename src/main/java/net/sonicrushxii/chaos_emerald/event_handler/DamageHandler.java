@@ -1,7 +1,7 @@
 package net.sonicrushxii.chaos_emerald.event_handler;
 
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.CombatRules;
+import net.minecraft.world.damagesource.CombatRules;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
