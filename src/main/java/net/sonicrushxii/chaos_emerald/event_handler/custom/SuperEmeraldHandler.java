@@ -824,9 +824,15 @@ public class SuperEmeraldHandler {
 
             }finally
             {
-                // Only sync once per second; individual activation methods already
-                // send an immediate sync when an ability first fires.
-                if (tick == 0) {
+                // Sync every tick while any super-emerald ability is actively running so
+                // that other players see timers ticking and abilities ending in real time.
+                // At idle, a once-per-second sync is enough to keep traffic low.
+                boolean anyActive = chaosEmeraldCap.aquaSuperUse > 0
+                        || chaosEmeraldCap.greenSuperUse > 0
+                        || chaosEmeraldCap.yellowSuperUse > 0
+                        || chaosEmeraldCap.purpleSuperUse > 0
+                        || chaosEmeraldCap.redSuperUse > 0;
+                if (tick == 0 || anyActive) {
                     PacketHandler.sendToALLPlayers(new EmeraldDataSyncS2C(
                             player.getId(), chaosEmeraldCap
                     ));

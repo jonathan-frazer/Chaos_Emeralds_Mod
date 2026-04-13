@@ -133,26 +133,29 @@ public class SuperFormHandler
 
                     //Water Running
                     {
-                        if (player.isSprinting() && !player.isInWater())
-                        {
+                        boolean onWaterSurface = false;
+                        if (player.isSprinting() && !player.isInWater()) {
                             try {
-                                if (Objects.equals(ForgeRegistries.BLOCKS.getKey(player.level().getBlockState(player.blockPosition().offset(0, -1, 0)).getBlock()), ForgeRegistries.BLOCKS.getKey(Blocks.WATER))) {
-                                    //Get Motion
-                                    Vec3 playerDirection = Utilities.calculateViewVector(0,player.getYRot());
-
-                                    if (!chaosEmeraldCap.isWaterBoosting) {
-                                        Objects.requireNonNull(player.getAttribute(ForgeMod.ENTITY_GRAVITY.get())).setBaseValue(0.0);
-                                        chaosEmeraldCap.isWaterBoosting = true;
-
-                                        //Slight upward
-                                        playerDirection = Utilities.calculateViewVector(-1,player.getYRot());
-                                    }
-
-                                    //Move Forward
-                                    player.setDeltaMovement(playerDirection.scale(3.0));
-                                    player.connection.send(new ClientboundSetEntityMotionPacket(player));
-                                }
+                                onWaterSurface = Objects.equals(
+                                    ForgeRegistries.BLOCKS.getKey(player.level().getBlockState(player.blockPosition().offset(0, -1, 0)).getBlock()),
+                                    ForgeRegistries.BLOCKS.getKey(Blocks.WATER));
                             } catch (NullPointerException ignored) {}
+                        }
+
+                        if (onWaterSurface) {
+                            Vec3 playerDirection = Utilities.calculateViewVector(0, player.getYRot());
+                            if (!chaosEmeraldCap.isWaterBoosting) {
+                                Objects.requireNonNull(player.getAttribute(ForgeMod.ENTITY_GRAVITY.get())).setBaseValue(0.0);
+                                chaosEmeraldCap.isWaterBoosting = true;
+                                playerDirection = Utilities.calculateViewVector(-1, player.getYRot());
+                            }
+                            player.setDeltaMovement(playerDirection.scale(3.0));
+                            player.connection.send(new ClientboundSetEntityMotionPacket(player));
+                        } else if (chaosEmeraldCap.isWaterBoosting) {
+                            // Player stepped off the water — restore gravity and clear the flag.
+                            // Without this the zero-gravity set on entry would persist forever.
+                            chaosEmeraldCap.isWaterBoosting = false;
+                            Objects.requireNonNull(player.getAttribute(ForgeMod.ENTITY_GRAVITY.get())).setBaseValue(0.08);
                         }
                     }
 

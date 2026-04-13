@@ -11,6 +11,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraftforge.fml.loading.FMLEnvironment;
+import net.minecraftforge.api.distmarker.Dist;
 import net.sonicrushxii.chaos_emerald.event_handler.custom.ChaosEmeraldHandler;
 import net.sonicrushxii.chaos_emerald.event_handler.custom.SuperEmeraldHandler;
 import org.jetbrains.annotations.NotNull;
@@ -22,6 +24,17 @@ public class SuperBlockItem extends BlockItem {
         super(pBlock, pProperties);
     }
 
+    /**
+     * Returns true when the player is holding Ctrl on the physical client.
+     * Must NOT be called on a dedicated server — Minecraft is a client-only class.
+     * Guard with FMLEnvironment.dist before calling.
+     */
+    private static boolean isCtrlHeld() {
+        Minecraft mc = Minecraft.getInstance();
+        return InputConstants.isKeyDown(mc.getWindow().getWindow(), InputConstants.KEY_LCONTROL)
+                || InputConstants.isKeyDown(mc.getWindow().getWindow(), InputConstants.KEY_RCONTROL);
+    }
+
     private static void useEmerald(String itemString, Level pLevel, Player pPlayer)
     {
         //Make String Tokenizer
@@ -29,9 +42,10 @@ public class SuperBlockItem extends BlockItem {
         //Ignore First Token
         sg.nextToken();
 
-        Minecraft minecraft = Minecraft.getInstance();
-        final boolean isCtrlDown = (InputConstants.isKeyDown(minecraft.getWindow().getWindow(), InputConstants.KEY_RCONTROL)
-                || InputConstants.isKeyDown(minecraft.getWindow().getWindow(), InputConstants.KEY_LCONTROL));
+        // Minecraft is a client-only class — querying keyboard state only makes sense on
+        // the physical client. On a dedicated server this would throw NoClassDefFoundError.
+        // When running server-side we default to the Super Emerald ability (Ctrl = false).
+        final boolean isCtrlDown = FMLEnvironment.dist == Dist.CLIENT && isCtrlHeld();
 
 
         //Get Last Token
@@ -78,7 +92,8 @@ public class SuperBlockItem extends BlockItem {
         assert player != null;
         if(!player.isShiftKeyDown()){
             useEmerald(pContext.getItemInHand().getItem().toString(), world, player);
-            return InteractionResult.FAIL;
+            // Return SUCCESS so use() is not also called as a fallback (double-fire).
+            return InteractionResult.SUCCESS;
         }
 
         return super.useOn(pContext);

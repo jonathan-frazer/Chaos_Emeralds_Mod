@@ -129,29 +129,31 @@ public class HyperFormHandler
                         }
                     }
 
-                    //Water Running
+                    //Water/Lava Running
                     {
-                        if (player.isSprinting() && !player.isInWater())
-                        {
+                        boolean onLiquidSurface = false;
+                        if (player.isSprinting() && !player.isInWater()) {
                             try {
-                                if (Objects.equals(ForgeRegistries.BLOCKS.getKey(player.level().getBlockState(player.blockPosition().offset(0, -1, 0)).getBlock()), ForgeRegistries.BLOCKS.getKey(Blocks.WATER)) ||
-                                        Objects.equals(ForgeRegistries.BLOCKS.getKey(player.level().getBlockState(player.blockPosition().offset(0, -1, 0)).getBlock()), ForgeRegistries.BLOCKS.getKey(Blocks.LAVA))) {
-                                    //Get Motion
-                                    Vec3 playerDirection = Utilities.calculateViewVector(0,player.getYRot());
-
-                                    if (!chaosEmeraldCap.isWaterBoosting) {
-                                        Objects.requireNonNull(player.getAttribute(ForgeMod.ENTITY_GRAVITY.get())).setBaseValue(0.0);
-                                        chaosEmeraldCap.isWaterBoosting = true;
-
-                                        //Slight upward
-                                        playerDirection = Utilities.calculateViewVector(-1,player.getYRot());
-                                    }
-
-                                    //Move Forward
-                                    player.setDeltaMovement(playerDirection.scale(3.5));
-                                    player.connection.send(new ClientboundSetEntityMotionPacket(player));
-                                }
+                                var blockBelow = ForgeRegistries.BLOCKS.getKey(
+                                    player.level().getBlockState(player.blockPosition().offset(0, -1, 0)).getBlock());
+                                onLiquidSurface = Objects.equals(blockBelow, ForgeRegistries.BLOCKS.getKey(Blocks.WATER))
+                                        || Objects.equals(blockBelow, ForgeRegistries.BLOCKS.getKey(Blocks.LAVA));
                             } catch (NullPointerException ignored) {}
+                        }
+
+                        if (onLiquidSurface) {
+                            Vec3 playerDirection = Utilities.calculateViewVector(0, player.getYRot());
+                            if (!chaosEmeraldCap.isWaterBoosting) {
+                                Objects.requireNonNull(player.getAttribute(ForgeMod.ENTITY_GRAVITY.get())).setBaseValue(0.0);
+                                chaosEmeraldCap.isWaterBoosting = true;
+                                playerDirection = Utilities.calculateViewVector(-1, player.getYRot());
+                            }
+                            player.setDeltaMovement(playerDirection.scale(3.5));
+                            player.connection.send(new ClientboundSetEntityMotionPacket(player));
+                        } else if (chaosEmeraldCap.isWaterBoosting) {
+                            // Player stepped off the liquid surface — restore gravity and clear flag.
+                            chaosEmeraldCap.isWaterBoosting = false;
+                            Objects.requireNonNull(player.getAttribute(ForgeMod.ENTITY_GRAVITY.get())).setBaseValue(0.08);
                         }
                     }
 

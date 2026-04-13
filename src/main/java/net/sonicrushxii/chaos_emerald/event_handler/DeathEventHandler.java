@@ -39,6 +39,21 @@ public class DeathEventHandler {
             event.getOriginal().getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(oldStore->{
                 event.getEntity().getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(newStore->{
                     newStore.copyFrom(oldStore);
+
+                    // Reset mid-ability states so they don't continue running on the
+                    // new player entity. Attributes (gravity, knockback resistance) are
+                    // fresh on the new entity so the ability state machine would mismatch
+                    // otherwise (e.g. zero-gravity purple blast resuming on respawn).
+                    newStore.greyChaosUse = 0;
+                    newStore.purpleChaosUse = 0;
+
+                    // Reset super-emerald active timers for the same reason.
+                    newStore.aquaSuperUse = 0;
+                    newStore.greenSuperUse = 0;
+                    newStore.yellowSuperUse = 0;
+                    newStore.purpleSuperUse = 0;
+                    newStore.redSuperUse = 0;
+                    newStore.isWaterBoosting = false;
                 });
             });
         }

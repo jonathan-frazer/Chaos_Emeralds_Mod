@@ -61,9 +61,11 @@ public class ChaosBlockItem extends BlockItem {
 
         assert player != null;
         if(!player.isShiftKeyDown()){
-            //If MainHand Fails check Offhand
             useEmerald(pContext.getItemInHand().getItem().toString(), world, player);
-            return InteractionResult.FAIL;
+            // Return SUCCESS (not FAIL) so that Minecraft does NOT also call use() as a
+            // fallback — FAIL leaves the action unconsumed, causing the ability to fire
+            // twice per right-click (once from useOn and once from use).
+            return InteractionResult.SUCCESS;
         }
 
         return super.useOn(pContext);

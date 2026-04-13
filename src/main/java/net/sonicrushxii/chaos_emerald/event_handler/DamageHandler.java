@@ -1,10 +1,13 @@
 package net.sonicrushxii.chaos_emerald.event_handler;
 
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.CombatRules;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.sonicrushxii.chaos_emerald.capabilities.ChaosEmeraldProvider;
 import net.sonicrushxii.chaos_emerald.modded.ModEffects;
@@ -61,6 +64,45 @@ public class DamageHandler {
 
             }
         }catch(NullPointerException ignored){}
+    }
+
+    /**
+     * Defense pierce — players in Super or Hyper form bypass 50 % of the target's armor.
+     *
+     * LivingHurtEvent fires BEFORE armor absorption, so event.getAmount() is the raw
+     * incoming damage.  The vanilla formula is:
+     *   afterArmor = CombatRules.getDamageAfterAbsorb(raw, armor, toughness)
+     *
+     * To make armor only absorb 50 % of its normal contribution we boost the raw
+     * damage before the engine applies armor, using the approximation:
+     *   newRaw = raw * (raw + afterArmor) / (2 * afterArmor)
+     *
+     * Under the linear-reduction assumption (constant armor factor), this yields:
+     *   CombatRules.getDamageAfterAbsorb(newRaw, armor, toughness)
+     *       ≈ (raw + afterArmor) / 2   [halfway between full-armor and no-armor]
+     */
+    @SubscribeEvent
+    public void onLivingHurt(LivingHurtEvent event)
+    {
+        if (!(event.getSource().getEntity() instanceof ServerPlayer attacker)) return;
+
+        attacker.getCapability(ChaosEmeraldProvider.CHAOS_EMERALD_CAP).ifPresent(cap -> {
+            if (cap.superFormTimer <= 0 && cap.hyperFormTimer <= 0) return;
+
+            LivingEntity target = event.getEntity();
+            float raw      = event.getAmount();
+            float armor    = (float) target.getAttributeValue(Attributes.ARMOR);
+            float toughness = (float) target.getAttributeValue(Attributes.ARMOR_TOUGHNESS);
+
+            if (armor <= 0) return; // nothing to pierce
+
+            float withArmor = CombatRules.getDamageAfterAbsorb(raw, armor, toughness);
+            if (withArmor >= raw) return; // armor absorbed nothing (extremely high toughness edge-case)
+
+            // Boost raw so after-armor damage lands halfway between full-armor and no-armor.
+            float newRaw = raw * (raw + withArmor) / (2.0f * withArmor);
+            event.setAmount(newRaw);
+        });
     }
 
     @SubscribeEvent

@@ -88,6 +88,14 @@ public class ChaosEmeraldBlock extends Block implements SimpleWaterloggedBlock {
         return super.canEntityDestroy(state, level, pos, entity);
     }
 
+    // Return 0 so no crack animation appears and mining never completes.
+    // The block hardness is 3600000F (not -1F) so that PistonStructureResolver
+    // allows pistons to push/pull it — -1F is the vanilla "immovable" sentinel.
+    @Override
+    public float getDestroyProgress(BlockState pState, net.minecraft.world.entity.player.Player pPlayer, BlockGetter pLevel, BlockPos pPos) {
+        return 0.0F;
+    }
+
     @Override
     public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
         if(pPlayer.getMainHandItem() == ItemStack.EMPTY && !pLevel.isClientSide) {

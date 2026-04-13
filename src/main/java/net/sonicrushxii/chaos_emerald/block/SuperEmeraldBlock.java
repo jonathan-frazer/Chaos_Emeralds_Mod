@@ -89,6 +89,11 @@ public class SuperEmeraldBlock extends Block implements SimpleWaterloggedBlock {
     }
 
     @Override
+    public float getDestroyProgress(BlockState pState, net.minecraft.world.entity.player.Player pPlayer, BlockGetter pLevel, BlockPos pPos) {
+        return 0.0F;
+    }
+
+    @Override
     public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
         if(pPlayer.getMainHandItem() == ItemStack.EMPTY && !pLevel.isClientSide) {
             //Playsound

@@ -1,0 +1,12 @@
+{
+  "replace": false,
+  "values": [
+    "chaos_emerald:super_emerald/aqua_emerald",
+    "chaos_emerald:super_emerald/blue_emerald",
+    "chaos_emerald:super_emerald/green_emerald",
+    "chaos_emerald:super_emerald/grey_emerald",
+    "chaos_emerald:super_emerald/purple_emerald",
+    "chaos_emerald:super_emerald/red_emerald",
+    "chaos_emerald:super_emerald/yellow_emerald"
+  ]
+}
