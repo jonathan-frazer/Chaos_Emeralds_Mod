@@ -1,5 +1,6 @@
 {
   "replace": false,
+  "drop_rule": "ALWAYS_DROP",
   "values": [
     "chaos_emerald:super_emerald/aqua_emerald",
     "chaos_emerald:super_emerald/blue_emerald",

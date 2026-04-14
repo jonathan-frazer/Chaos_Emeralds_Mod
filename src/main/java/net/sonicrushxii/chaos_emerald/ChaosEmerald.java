@@ -14,9 +14,12 @@ import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.InterModComms;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import top.theillusivec4.curios.api.SlotTypeMessage;
 import net.sonicrushxii.chaos_emerald.client.VirtualSlotData;
 import net.sonicrushxii.chaos_emerald.entities.all.PointRenderer;
 import net.sonicrushxii.chaos_emerald.entities.aqua.ChaosBubbleModel;
@@ -65,6 +68,7 @@ public class ChaosEmerald
 
         // Register the item to a creative tab
         modEventBus.addListener(thisMod::addCreative);
+        modEventBus.addListener(thisMod::enqueueIMC);
 
         //Mod Stuff
         ModItems.register(modEventBus);
@@ -89,7 +93,20 @@ public class ChaosEmerald
         // Some common setup code
         LOGGER.info("HELLO FROM COMMON SETUP");
         event.enqueueWork(PacketHandler::register);
+    }
 
+    private void enqueueIMC(final InterModEnqueueEvent event)
+    {
+        // Register the custom "gem" Curios slot so it appears in the Curios GUI.
+        // Size 1 means one super emerald can be equipped at a time.
+        // The data-driven JSON (data/chaos_emerald/curios/slots/gem.json) is the
+        // primary declaration; this IMC call ensures Curios registers it even if
+        // the data loader hasn't fired yet.
+        InterModComms.sendTo("curios", SlotTypeMessage.REGISTER_TYPE,
+                () -> new SlotTypeMessage.Builder("gem")
+                        .size(1)
+                        .icon(new net.minecraft.resources.ResourceLocation(MOD_ID, "slot/gem"))
+                        .build());
     }
 
     // Add the example block item to the building blocks tab

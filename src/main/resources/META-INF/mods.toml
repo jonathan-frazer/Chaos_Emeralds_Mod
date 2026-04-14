@@ -13,6 +13,9 @@ license="${mod_license}"
 # A URL to refer people to when problems occur with this mod
 #issueTrackerURL="https://change.me.to.your.issue.tracker.example.invalid/" #optional
 # A list of mods - how many allowed here is determined by the individual mod loader
+[[mixins]]
+config="mixins.chaos_emerald.json"
+
 [[mods]] #mandatory
 # The modid of the mod
 modId="${mod_id}" #mandatory
