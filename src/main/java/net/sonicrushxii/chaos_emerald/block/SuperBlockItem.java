@@ -69,11 +69,11 @@ public class SuperBlockItem extends BlockItem {
                 if (player.tickCount % 20 != 0) return;
 
                 switch (emeraldColor(stack)) {
-                    case "red_emerald"    -> applyEffect(player, MobEffects.FIRE_RESISTANCE, 40, 0);
-                    case "blue_emerald"   -> applyEffect(player, MobEffects.MOVEMENT_SPEED, 40, 0);
-                    case "aqua_emerald"   -> applyEffect(player, MobEffects.DOLPHINS_GRACE, 40, 0);
-                    case "yellow_emerald" -> applyEffect(player, MobEffects.DAMAGE_RESISTANCE, 40, 0);
-                    case "grey_emerald"   -> applyEffect(player, MobEffects.HEALTH_BOOST, 40, 3);
+                    case "red_emerald"    -> applyEffect(player, MobEffects.FIRE_RESISTANCE, 80, 0);
+                    case "blue_emerald"   -> applyEffect(player, MobEffects.MOVEMENT_SPEED, 80, 0);
+                    case "aqua_emerald"   -> applyEffect(player, MobEffects.DOLPHINS_GRACE, 80, 0);
+                    case "yellow_emerald" -> applyEffect(player, MobEffects.DAMAGE_RESISTANCE, 80, 0);
+                    case "grey_emerald"   -> applyEffect(player, MobEffects.HEALTH_BOOST, 80, 3);
                     // purple → attribute modifier below; green → LootingLevelEvent in CuriosBonusHandler
                 }
             }
@@ -152,9 +152,6 @@ public class SuperBlockItem extends BlockItem {
     }
 
     private static void applyEffect(ServerPlayer player, MobEffect effect, int duration, int amplifier) {
-        MobEffectInstance existing = player.getEffect(effect);
-        MobEffectInstance inst = new MobEffectInstance(effect, duration, amplifier, false, false, false);
-        if (existing != null) existing.update(inst);
-        else player.addEffect(inst, player);
+        player.addEffect(new MobEffectInstance(effect, duration, amplifier, false, false, false), player);
     }
 }
