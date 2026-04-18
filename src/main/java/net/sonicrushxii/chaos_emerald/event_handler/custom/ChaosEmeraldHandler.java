@@ -1,6 +1,8 @@
 package net.sonicrushxii.chaos_emerald.event_handler.custom;
 
 import net.minecraft.client.player.AbstractClientPlayer;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.DustParticleOptions;
@@ -434,6 +436,7 @@ public class ChaosEmeraldHandler {
         });
     }
 
+    @OnlyIn(Dist.CLIENT)
     public static void clientTick(AbstractClientPlayer player, int clientTick) {
     }
 }

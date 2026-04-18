@@ -1,6 +1,8 @@
 package net.sonicrushxii.chaos_emerald.event_handler.custom;
 
 import net.minecraft.client.player.AbstractClientPlayer;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerPlayer;
@@ -249,6 +251,7 @@ public class FalseSuperHandler
         });
     }
 
+    @OnlyIn(Dist.CLIENT)
     public static void clientTick(AbstractClientPlayer player)
     {
         //Master Emerald - Key Press Use

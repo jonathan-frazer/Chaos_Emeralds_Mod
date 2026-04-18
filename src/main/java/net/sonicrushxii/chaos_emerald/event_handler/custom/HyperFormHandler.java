@@ -1,6 +1,8 @@
 package net.sonicrushxii.chaos_emerald.event_handler.custom;
 
 import net.minecraft.client.player.AbstractClientPlayer;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.protocol.game.ClientboundSetEntityMotionPacket;
@@ -265,6 +267,7 @@ public class HyperFormHandler
         });
     }
 
+    @OnlyIn(Dist.CLIENT)
     public static void clientTick(AbstractClientPlayer player)
     {
         //Sends a Packet To Activate Hyper form if you have all Seven Emeralds.

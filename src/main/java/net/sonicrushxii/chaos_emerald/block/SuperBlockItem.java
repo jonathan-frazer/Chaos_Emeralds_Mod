@@ -1,7 +1,5 @@
 package net.sonicrushxii.chaos_emerald.block;
 
-import com.google.common.collect.LinkedHashMultimap;
-import com.google.common.collect.Multimap;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
@@ -13,9 +11,6 @@ import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.ai.attributes.Attribute;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
@@ -33,13 +28,11 @@ import top.theillusivec4.curios.api.SlotContext;
 import top.theillusivec4.curios.api.type.capability.ICurio;
 import net.sonicrushxii.chaos_emerald.event_handler.custom.ChaosEmeraldHandler;
 import net.sonicrushxii.chaos_emerald.event_handler.custom.SuperEmeraldHandler;
+import net.sonicrushxii.chaos_emerald.modded.ModEffects;
 
 import java.util.StringTokenizer;
-import java.util.UUID;
 
 public class SuperBlockItem extends BlockItem {
-
-    private static final UUID LUCK_UUID = UUID.fromString("c4e7d3a2-11f8-4b2c-a9e1-7c3f85d20b4e");
 
     public SuperBlockItem(Block pBlock, Properties pProperties) {
         super(pBlock, pProperties);
@@ -69,26 +62,14 @@ public class SuperBlockItem extends BlockItem {
                 if (player.tickCount % 20 != 0) return;
 
                 switch (emeraldColor(stack)) {
-                    case "red_emerald"    -> applyEffect(player, MobEffects.FIRE_RESISTANCE, 80, 0);
-                    case "blue_emerald"   -> applyEffect(player, MobEffects.MOVEMENT_SPEED, 80, 0);
-                    case "aqua_emerald"   -> applyEffect(player, MobEffects.DOLPHINS_GRACE, 80, 0);
-                    case "yellow_emerald" -> applyEffect(player, MobEffects.DAMAGE_RESISTANCE, 80, 0);
-                    case "grey_emerald"   -> applyEffect(player, MobEffects.HEALTH_BOOST, 80, 3);
-                    // purple → attribute modifier below; green → LootingLevelEvent in CuriosBonusHandler
+                    case "red_emerald"    -> applyEffect(player, MobEffects.FIRE_RESISTANCE, 0);
+                    case "blue_emerald"   -> applyEffect(player, MobEffects.MOVEMENT_SPEED, 0);
+                    case "aqua_emerald"   -> applyEffect(player, MobEffects.DOLPHINS_GRACE, 0);
+                    case "yellow_emerald" -> applyEffect(player, MobEffects.DAMAGE_RESISTANCE, 0);
+                    case "grey_emerald"   -> applyEffect(player, MobEffects.HEALTH_BOOST, 3);
+                    case "purple_emerald" -> applyEffect(player, MobEffects.LUCK, 2);
+                    case "green_emerald"  -> applyEffect(player, ModEffects.CHAOS_LOOTING.get(), 0);
                 }
-            }
-
-            @Override
-            public Multimap<Attribute, AttributeModifier> getAttributeModifiers(
-                    SlotContext slotContext, UUID uuid) {
-                Multimap<Attribute, AttributeModifier> map = LinkedHashMultimap.create();
-                if ("purple_emerald".equals(emeraldColor(stack))) {
-                    map.put(Attributes.LUCK,
-                            new AttributeModifier(LUCK_UUID,
-                                    "chaos_emerald.fortune", 3.0,
-                                    AttributeModifier.Operation.ADDITION));
-                }
-                return map;
             }
         });
     }
@@ -151,7 +132,7 @@ public class SuperBlockItem extends BlockItem {
         return slash >= 0 ? path.substring(slash + 1) : path;
     }
 
-    private static void applyEffect(ServerPlayer player, MobEffect effect, int duration, int amplifier) {
-        player.addEffect(new MobEffectInstance(effect, duration, amplifier, false, false, false), player);
+    private static void applyEffect(ServerPlayer player, MobEffect effect, int amplifier) {
+        player.addEffect(new MobEffectInstance(effect, 80, amplifier, false, false, true), player);
     }
 }
